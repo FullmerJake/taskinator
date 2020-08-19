@@ -1,8 +1,23 @@
-// this assigns the variable buttonEl to the value of the html DOM object 
-// this also optimizes performance, because instead of having to search the document and query select, you've assigned the variable at the 
-// beginning.
+//creates a new element in the HTML in browser when the eventListener is triggered.
 
-// var buttonEl now represents the same button element from the html. 
-// the 'El' suffix identifies this as a DOM element. 
-var buttonEl = document.querySelector('#save-task');
-console.log(buttonEL);
+var buttonEl = document.querySelector("#save-task");
+var tasksToDoEl = document.querySelector('#tasks-to-do');
+
+
+
+var createTaskHandler = function (){
+    var listItemEl = document.createElement('li');
+    listItemEl.className = 'task-item';
+    listItemEl.textContent = 'This is a new task';
+    tasksToDoEl.appendChild(listItemEl);
+};
+
+// listens for a click on the button DOM element, executes the createTaskHandler function. 
+buttonEl.addEventListener('click', createTaskHandler);
+
+var createTaskHandler = function (){
+    var listItemEl = document.createElement('li');
+    listItemEl.className = 'task-item';
+    listItemEl.textContent = 'This is a new task';
+    tasksToDoEl.appendChild(listItemEl);
+};
