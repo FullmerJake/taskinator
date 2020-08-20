@@ -11,6 +11,18 @@ var taskFormHandler = function (){
     //the DOM creates an object of the select dropdown menu. when you select one of them, the value becomes that. This pulls that value. 
     var taskTypeInput = document.querySelector("select[name='task-type']").value;
 
+    //check if input values are empty strings
+    // !something checks to see if the variable is empty by asking if it's a falsy value.
+    // checks for false values instead of true ones. 
+    // "if either one or both of the variables are NOT true, proceed"
+    if(!taskNameInput || !taskTypeInput) {
+        alert("You need to fill out the task form!");
+        return false;
+    }
+
+    formEl.reset();
+
+
     //package up data as an object
     var taskDataObj = {
         name: taskNameInput,
