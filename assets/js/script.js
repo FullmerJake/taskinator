@@ -54,6 +54,7 @@ var createTaskEl = function(taskDataObj){
 
     //add task ID as a custom attribute
     listItemEl.setAttribute("data-task-id", taskIdCounter);
+    listItemEl.setAttribute('draggable', 'true');
   
     //create div to hold task info and add to list item
     var taskInfoEl = document.createElement('div');
@@ -200,17 +201,55 @@ var taskStatusChangeHandler = function(event){
     }
 };
 
+var dragTaskHandler = function(event){
+    var taskId = event.target.getAttribute('data-task-id');
+    //setData() takes 2 arguements. 1. data's format and 2. states the data's value. 
+    event.dataTransfer.setData('text/plain', taskId);
+    var getId = event.dataTransfer.getData('text/plain');
+    console.log('getId: ', getId, typeof getId);
+};
+
+var dropZoneDragHandler = function(event){
+    var taskListEl = event.target.closest('.task-list');
+    if (taskListEl){
+        event.preventDefault();
+    };
+    
+};
+
+var dropTaskHandler = function(event){
+    var id = event.dataTransfer.getData('text/plain');
+    var draggableElement = document.querySelector("[data-task-id='" + id + "']");
+    var dropZoneEl = event.target.closest('.task-list');
+    var statusType = dropZoneEl.id;
+    //set status of task based on dropZone id
+    var statusSelectEl = draggableElement.querySelector("select[name='status-change']");
+    
+    if(statusType === 'tasks-to-do'){
+        //selectedIndex is a new property tha allows us to set the display option in a list by specifying the option's 0-based position in the list. 
+        statusSelectEl.selectedIndex = 0;
+    }
+    else if (statusType === 'tasks-in-progress'){
+        //by assigning a number to the index, we're selecting an option (from the drop down menu) that we want to display in the <select> element. 
+        statusSelectEl.selectedIndex = 1;
+    }
+    else if (statusType === 'tasks-completed') {
+        statusSelectEl.selectedIndex = 2;
+    }
+
+    dropZoneEl.appendChild(draggableElement);
+};
+
+
 // listens for a submit or enter key on the button DOM element, executes the taskFormHandler function. 
 formEl.addEventListener('submit', taskFormHandler);
 // listens for a click on the button DOM element, executes the taskButtonHandler function. 
 pageContentEl.addEventListener('click', taskButtonHandler);
 // listens for a status change, then excecutes taskStatusChangeHandler function.
 pageContentEl.addEventListener('change', taskStatusChangeHandler);
-
-
-var taskFormHandler = function (){
-    var listItemEl = document.createElement('li');
-    listItemEl.className = 'task-item';
-    listItemEl.textContent = 'This is a new task';
-    tasksToDoEl.appendChild(listItemEl);
-};
+//
+pageContentEl.addEventListener('dragstart', dragTaskHandler);
+//
+pageContentEl.addEventListener('dragover', dropZoneDragHandler);
+//
+pageContentEl.addEventListener('drop', dropTaskHandler);
