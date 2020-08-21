@@ -309,55 +309,27 @@ var saveTasks = function(){
     localStorage.setItem('tasks', JSON.stringify(tasks));
 };
 
-var loadTasks = function() {
-    //convert tasks from the stringified format back into an array of objects
-    //itterates through tasks array and creates task elements on the page from it. 
+var loadTasks = function() { 
 
     //gets task items from local storage
-    tasks = localStorage.getItem('tasks');
+    savedTasks = localStorage.getItem('tasks');
 
     if (!tasks){
         tasks = [];
         return false
     }
-    //turns the stringified array back into objects. 
-    tasks = JSON.parse(tasks);
     
-    for(var i = 0; i < tasks.length; i++){
-        tasks[i].id = taskIdCounter;
-        //create list item
-        var listItemEl = document.createElement('li');
-        listItemEl.className = 'task-item';
-        //add task ID as a custom attribute
-        listItemEl.setAttribute('data-task-id', tasks[i].id);
-        listItemEl.setAttribute('draggable', 'true');
-        //create div to hold task info and add to list item
-        var taskInfoEl = document.createElement('div');
-        taskInfoEl.className = 'task-info';
-        taskInfoEl.innerHTML = "<h3 class='task-name'>" + tasks[i].name + "</h3><span class='task-type'>" + tasks[i].type + "</span>";
-        listItemEl.appendChild(taskInfoEl);
-
-        var taskActionsEl = createTaskActions(tasks[i].id);
-        listItemEl.appendChild(taskActionsEl);
-        
-        if (tasks[i].status === 'To Do'){
-            listItemEl.querySelector("select[name='status-change']").selectedIndex = 0;
-            listItemEl.appendChild(tasksToDoEl);
-        }
-        else if (tasks[i].status === 'In Progress'){
-            listItemEl.querySelector("select[name='status-change']").selectedIndex = 1;
-            listItemEl.appendChild(tasksInProgressEl);
-        }
-        else if (tasks[i].status === 'Completed'){
-            listItemEl.querySelector("select[name='status-change']").selectedIndex = 2;
-            listItemEl.appendChild(tasksCompletedEl);
-        }
-
-        taskIdCounter++;
-        console.log(listItemEl);
+    savedTasks = JSON.parse(savedTasks);
+    //loop through savedTasks array
+    for (var i = 0; i < savedTasks.length; i++){
+        //pass each task object into the createaTaskEl() function
+        createTaskEl(savedTasks[i]);
     };
+    
 };
+
 loadTasks();
+
 
 // listens for a submit or enter key on the button DOM element, executes the taskFormHandler function. 
 formEl.addEventListener('submit', taskFormHandler);
