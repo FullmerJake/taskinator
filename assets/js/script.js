@@ -110,8 +110,15 @@ var createTaskActions = function(taskId){
 };
 
 var taskButtonHandler = function(event) {
-    console.log(event.target);
+    //get target element from even
+    var targetEl = event.target;
 
+    //IF EDIT BUTTON WAS CLICKED
+    if (targetEl.matches('.edit-btn')){
+        var taskId = targetEl.getAttribute('data-task-id');
+        editTask(taskId);
+    };
+    //IF DELETE BUTTON WAS CLICKED
     //functions excecutes if i click on the element with a class of delete-btn
     if (event.target.matches('.delete-btn')){
         //the taskId variable is equal to the data-task-id attribute of whatever the target of the click is. 
@@ -126,6 +133,22 @@ var deleteTask = function(taskID){
     //finds an element with the class of task-item and a data-task-id of taskID.
     var taskSelected = document.querySelector(".task-item[data-task-id='" + taskID + "']");
     taskSelected.remove();
+};
+
+//ran in taskButtonHandler fucntion
+var editTask = function(taskId){
+
+    //get task list item element
+    var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']")
+
+    //get content from task name and type
+    var taskName = taskSelected.querySelector("h3.task-name").textContent;
+    var taskType = taskSelected.querySelector("span.task-type").textContent;
+    document.querySelector("input[name='task-name']").value = taskName;
+    document.querySelector("select[name='task-type']").value = taskType;
+    document.querySelector('#save-task').textContent = 'Save Task';
+    formEl.setAttribute('data-task-id', taskId);
+
 };
 
 // listens for a click on the button DOM element, executes the taskFormHandler function. 
