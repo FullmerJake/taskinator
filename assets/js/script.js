@@ -206,13 +206,13 @@ var dragTaskHandler = function(event){
     //setData() takes 2 arguements. 1. data's format and 2. states the data's value. 
     event.dataTransfer.setData('text/plain', taskId);
     var getId = event.dataTransfer.getData('text/plain');
-    console.log('getId: ', getId, typeof getId);
 };
 
 var dropZoneDragHandler = function(event){
     var taskListEl = event.target.closest('.task-list');
     if (taskListEl){
         event.preventDefault();
+        taskListEl.setAttribute("style", "background: rgba(68, 233, 255, 0.7); border-style: dashed");
     };
     
 };
@@ -236,8 +236,17 @@ var dropTaskHandler = function(event){
     else if (statusType === 'tasks-completed') {
         statusSelectEl.selectedIndex = 2;
     }
+    //removes the hover over styling element when not on top.
+    dropZoneEl.removeAttribute("style");
 
     dropZoneEl.appendChild(draggableElement);
+};
+
+var dragLeaveHandler = function(event){
+    var taskListEl = event.target.closest(".task-list");
+    if (taskListEl){
+        taskListEl.removeAttribute("style");
+    };
 };
 
 
@@ -253,3 +262,5 @@ pageContentEl.addEventListener('dragstart', dragTaskHandler);
 pageContentEl.addEventListener('dragover', dropZoneDragHandler);
 //
 pageContentEl.addEventListener('drop', dropTaskHandler);
+//
+pageContentEl.addEventListener('dragleave', dragLeaveHandler);
