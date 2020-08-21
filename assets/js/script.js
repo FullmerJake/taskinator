@@ -4,6 +4,8 @@ var formEl = document.querySelector('#task-form');
 var tasksToDoEl = document.querySelector('#tasks-to-do');
 var taskIdCounter = 0;
 var pageContentEl = document.querySelector('#page-content');
+var tasksInProgressEl = document.querySelector('#tasks-in-progress');
+var tasksCompletedEl = document.querySelector('#tasks-completed');
 
 var taskFormHandler = function (){
 
@@ -172,11 +174,39 @@ var completeEditTask = function(taskName, taskType, taskId){
     //resets the form by removing the task ID and changing the button text back to normal
     formEl.removeAttribute('data-task-id');
     document.querySelector('#save-task').textContent = 'Add Task';
-}
+};
 
-// listens for a click on the button DOM element, executes the taskFormHandler function. 
+var taskStatusChangeHandler = function(event){
+    //get the task item's id
+    var taskId = event.target.getAttribute('data-task-id');
+
+    //get the currently selected option's value and convert to lowercase
+    var statusValue = event.target.value.toLowerCase();
+
+    //find the parent task item element based on the id
+    var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+
+    if (statusValue === 'to do'){
+        tasksToDoEl.appendChild(taskSelected);
+        // console.log(taskSelected);
+    }
+    else if (statusValue === 'in progress'){
+        tasksInProgressEl.appendChild(taskSelected);
+        // console.log(taskSelected);
+    }
+    else if (statusValue === 'completed'){
+        tasksCompletedEl.appendChild(taskSelected);
+        // console.log(taskSelected);
+    }
+};
+
+// listens for a submit or enter key on the button DOM element, executes the taskFormHandler function. 
 formEl.addEventListener('submit', taskFormHandler);
+// listens for a click on the button DOM element, executes the taskButtonHandler function. 
 pageContentEl.addEventListener('click', taskButtonHandler);
+// listens for a status change, then excecutes taskStatusChangeHandler function.
+pageContentEl.addEventListener('change', taskStatusChangeHandler);
+
 
 var taskFormHandler = function (){
     var listItemEl = document.createElement('li');
